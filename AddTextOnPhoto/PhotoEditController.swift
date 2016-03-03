@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextFieldDelegate {
+class PhotoEditController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextFieldDelegate {
     
     // IBOutlet
     @IBOutlet weak var imagePickerView: UIImageView!
@@ -122,8 +122,8 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     
     func generateNewImage() -> UIImage {
         // hide the toolbar and navigation bar
-        self.toolbar.hidden = true
-        self.navigationController?.navigationBar.hidden = true
+        toolbar.hidden = true
+        navigationController?.navigationBar.hidden = true
         
         UIGraphicsBeginImageContext(self.view.frame.size)
         view.drawViewHierarchyInRect(self.view.frame, afterScreenUpdates: true)
@@ -131,23 +131,31 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         UIGraphicsEndImageContext()
         
         // show the toolbar and navigation bar
-        self.toolbar.hidden = false
-        self.navigationController?.navigationBar.hidden = false
+        toolbar.hidden = false
+        navigationController?.navigationBar.hidden = false
         
         return editedImage
     }
     
-    func saveImage() {
-        let editedImage = generateNewImage()
+    func saveImage(editedImage: UIImage) {
+        
         newImage = NewImage(topTxt: topTxtFld.text!, bottomTxt: bottomTxtFld.text!, image: imagePickerView.image!, editedImage: editedImage)
         
     }
 
     @IBAction func share(sender: AnyObject) {
-        saveImage()
-        let activityViewController = UIActivityViewController(activityItems: [self.newImage!.editedImage], applicationActivities: nil)
+        let editedImage = generateNewImage()
+        let activityViewController = UIActivityViewController(activityItems: [editedImage], applicationActivities: nil)
         
         self.presentViewController(activityViewController, animated: true, completion: nil)
+        
+        activityViewController.completionWithItemsHandler = {
+            (activity, success, items, error) in
+            print("Activity: \(activity) Success: \(success) Items: \(items) Error: \(error)")
+            if success == true {
+                self.saveImage(editedImage)
+            }
+        }
     }
     
 }

@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-class NewImage {
+struct NewImage {
     private var _topTxt: String!
     private var _bottomTxt: String!
     private var _image: UIImage!
