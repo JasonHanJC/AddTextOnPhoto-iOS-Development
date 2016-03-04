@@ -20,7 +20,6 @@ class PhotoEditController: UIViewController, UIImagePickerControllerDelegate, UI
     @IBOutlet weak var cameraBtn: UIBarButtonItem!
     
     // var
-    var newImage: NewImage?
     var contentMode = UIViewContentMode.ScaleAspectFill
     let textAttributes = [
         NSStrokeColorAttributeName : UIColor.blackColor(),
@@ -139,7 +138,12 @@ class PhotoEditController: UIViewController, UIImagePickerControllerDelegate, UI
     
     func saveImage(editedImage: UIImage) {
         
-        newImage = NewImage(topTxt: topTxtFld.text!, bottomTxt: bottomTxtFld.text!, image: imagePickerView.image!, editedImage: editedImage)
+        let newImage = NewImage(topTxt: topTxtFld.text!, bottomTxt: bottomTxtFld.text!, image: imagePickerView.image!, editedImage: editedImage)
+        
+        // save the image to the editedImage array
+        let object = UIApplication.sharedApplication().delegate
+        let appDelegate = object as! AppDelegate
+        appDelegate.editedImages.append(newImage)
         
     }
 
